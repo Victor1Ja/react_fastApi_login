@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import {getToken} from "./Auth";
+import {getToken, setToken} from "./Auth";
 import { useState } from "react";
+import axios from "axios";
+
+
 export default function Login(){
     const navigate = useNavigate();
     const [username,setUsername] = useState("");
@@ -12,6 +15,22 @@ export default function Login(){
         }else{
             //api call to backend
             //if successfully logged in save the token in local storage
+            axios.post("http://localhost:8000/login",{
+                username: username,
+                password: password,
+            }).then(function (response) {
+            console.log(response.data.token, "response.data.token");
+            
+            if( response.data.token){
+                setToken(response.data.token);
+                navigate("/profile");
+            }
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
 
         }
     }
@@ -21,7 +40,10 @@ export default function Login(){
                 <h1>Login</h1>
                 <div style={{ marginTop: 30 }}>
                     { getToken() ? (
-                        <p>You are logged in :-)</p>                        
+                        <div>
+                            <p>You are logged in :-)</p>
+                            <button> <a href="/profile"> Profile</a></button>
+                        </div>
                     ) : (
                         <div>
                             <form>
