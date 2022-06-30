@@ -15,8 +15,9 @@ export default function Login(){
         }else{
             //api call to backend
             //if successfully logged in save the token in local storage
-            axios.post("http://localhost:8000/login",{
+            axios.post("http://localhost:8001/login",{
                 username: username,
+                email: username,
                 password: password,
             }).then(function (response) {
             console.log(response.data.token, "response.data.token");
@@ -24,6 +25,8 @@ export default function Login(){
             if( response.data.token){
                 setToken(response.data.token);
                 navigate("/profile");
+            }else{
+                alert("Invalid username or password");
             }
 
             })
